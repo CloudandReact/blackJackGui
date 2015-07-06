@@ -11,10 +11,10 @@ public class Deck {
 	
 	static final int MAX = 52;	
 	//ArrayList deck
-	private ArrayList<Card> deck = new ArrayList<Card>();
+	protected ArrayList<Card> deck = new ArrayList<Card>();
 
 	/*
-	 * initiate and create the deck of 52 cards
+	 * initiate and create the deck of 52 cards default one deck
 	 */
 	public Deck() {
 		int index = 0;	
@@ -32,6 +32,9 @@ public class Deck {
 		//remove dealed card from a deck 
 		int index = (int)(Math.random()*deck.size()); 
 		return deck.remove(index);		
+	}
+	public boolean isSingleDeck(){
+		return true;
 	}
 			
 }

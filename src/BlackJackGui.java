@@ -33,6 +33,7 @@ public class BlackJackGui {
 	private boolean gameOn;
 	private boolean isFirstGame = false;
 	private JLabel playerBalance ;
+	private Payout payout;
 
 	private JComboBox<?> decks;
 
@@ -94,7 +95,6 @@ public class BlackJackGui {
 		drawPanel.add(decksLabel);
 		drawPanel.add(decks);
 		drawPanel.add(betsCom);
-
 		//register hit button event listener
 		hitButton.addActionListener(new HitListener());
 		decks.addActionListener( new DeckListener() );
@@ -112,7 +112,6 @@ public class BlackJackGui {
 		player.clearHands();
 		dealer.clearHand();
 		gameOn = false;
-		frame.repaint();
 		drawPanel.setDealerHand(dealer.getHand());
 		drawPanel.setPlayerHand(player.getHands());
 	}
@@ -146,7 +145,7 @@ public class BlackJackGui {
 		public void actionPerformed(ActionEvent event) {
 			//start new game
 			if (!gameOn) {
-				
+
 				String command = (String) handsNumber.getSelectedItem();
 				handsNumber.setEnabled(false);
 				System.out.println(command);
@@ -169,15 +168,11 @@ public class BlackJackGui {
 					Hand playerHand = new Hand(deck.dealCard(),deck.dealCard(),betValue,true);
 					player.addHand(playerHand);
 				}
-
-
-
-
 				dealer.setHand(dealerHand);
 
 				//check if the player has a blackjack
 				for(int i=0;i<player.getNumberOfHands();i++){
-					if(player.getHand(i).isBlackJack2() &&dealer.getHand().isBlackJack2() ){
+					if(player.getHand(i).isBlackJack2() && dealer.getHand().isBlackJack2() ){
 
 					}
 					else{
@@ -254,10 +249,9 @@ public class BlackJackGui {
 				}
 				else{
 					System.out.println("busted cant hit");
-					player.getHand(currentHand).setBet(0);
 					if(player.getNumberOfHands()+1==player.getCurrentHand()){
-							gameOn=false;
-							System.out.println("game on false");
+						gameOn=false;
+						System.out.println("game on false");
 						//resetGame();
 					}
 					else{
@@ -289,12 +283,13 @@ public class BlackJackGui {
 	 */
 	class standListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			Utility.Winner winner;
+			
 			if (gameOn) {
+				boolean isGameOver = false;
 				int currentHandNumber = player.getCurrentHand();
 				Hand currentHand = player.getHand(currentHandNumber);
 				if(currentHand.isBusted()){
-					player.getHand(player.getCurrentHand()).setBet(0);					
+					System.out.println("current bad busted");	
 				}
 
 				else{
@@ -302,7 +297,8 @@ public class BlackJackGui {
 
 				}
 				if(currentHandNumber+1>=player.getNumberOfHands()){
-					gameOn=false;
+					
+					isGameOver = true;
 				}
 				player.incrementCurrentHand();
 				//loop check player all hands dealt
@@ -329,14 +325,24 @@ public class BlackJackGui {
 					default:		break;
 					}		
 				 */	
-				drawPanel.setMessage(message);
-				drawPanel.setGameOn(gameOn);
-				drawPanel.setPlayerHand(player.getHands());
-				drawPanel.setDealerHand(dealer.getHand());
-				System.out.println("player hand" + player.getHands()==null);
-				frame.repaint();
+				if(!isGameOver){
+					drawPanel.setMessage(message);
+					drawPanel.setGameOn(gameOn);
+					System.out.println("player hand" + player.getHands()==null);
+					frame.repaint();
+				}
+				else{
+					payout = new Payout(dealer,player);
+					payout.payoutCalculation();
+					drawPanel.setMessage(payout.message());
+					drawPanel.setGameOn(gameOn);
+					System.out.println("player hand" + player.getHands()==null);
+					frame.repaint();
+					resetGame();
+				}
 				
-			
+
+
 			}
 
 		}
@@ -395,7 +401,7 @@ public class BlackJackGui {
 			//draw message
 			g.setFont(new Font("Arial", Font.BOLD, 20));
 			g.setColor(new Color(1.0f, 0.0f, 0.0f));
-			g.drawString(message,240,225);
+			g.drawString(message,150,50);
 			//draw player's hand
 			if (playerHands != null) {
 				for (int i=0; i < playerHands.size(); i++) {

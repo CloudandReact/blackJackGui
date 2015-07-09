@@ -32,6 +32,7 @@ public class BlackJackGui {
 	//game on
 	private boolean gameOn;
 	private boolean isFirstGame = false;
+	private JLabel playerBalance ;
 
 	private JComboBox<?> decks;
 
@@ -106,11 +107,14 @@ public class BlackJackGui {
 	public void resetGame(){
 		betsCom.setEnabled(true);
 		handsNumber.setEnabled(true);
-		//hitButton.setEnabled(false);
 		//player.setCurrentHand(0);
+		//hitButton.setEnabled(false);
 		player.clearHands();
 		dealer.clearHand();
 		gameOn = false;
+		frame.repaint();
+		drawPanel.setDealerHand(dealer.getHand());
+		drawPanel.setPlayerHand(player.getHands());
 	}
 
 	/*
@@ -129,6 +133,10 @@ public class BlackJackGui {
 		message = "";
 		//game is on
 		gameOn = true;
+		playerBalance= new JLabel("Player balance" + player.getBalance());
+		playerBalance.setFont(new Font("Arial", Font.BOLD, 20));
+		playerBalance.setBounds(400,25,220,40);
+		drawPanel.add(playerBalance);
 	}
 
 	/*
@@ -138,7 +146,7 @@ public class BlackJackGui {
 		public void actionPerformed(ActionEvent event) {
 			//start new game
 			if (!gameOn) {
-
+				
 				String command = (String) handsNumber.getSelectedItem();
 				handsNumber.setEnabled(false);
 				System.out.println(command);
@@ -246,10 +254,17 @@ public class BlackJackGui {
 				}
 				else{
 					System.out.println("busted cant hit");
-					player.incrementCurrentHand();
-					if(player.getNumberOfHands()==player.getCurrentHand()){
-						resetGame();
+					player.getHand(currentHand).setBet(0);
+					if(player.getNumberOfHands()+1==player.getCurrentHand()){
+							gameOn=false;
+							System.out.println("game on false");
+						//resetGame();
 					}
+					else{
+						player.incrementCurrentHand();
+					}
+
+
 				}
 
 
@@ -279,17 +294,17 @@ public class BlackJackGui {
 				int currentHandNumber = player.getCurrentHand();
 				Hand currentHand = player.getHand(currentHandNumber);
 				if(currentHand.isBusted()){
-					player.getHand(player.getCurrentHand()).setBet(0);
-					player.incrementCurrentHand();
+					player.getHand(player.getCurrentHand()).setBet(0);					
 				}
 
 				else{
 					System.out.println("not busted continue");
-					player.incrementCurrentHand();
+
 				}
 				if(currentHandNumber+1>=player.getNumberOfHands()){
-					resetGame();
+					gameOn=false;
 				}
+				player.incrementCurrentHand();
 				//loop check player all hands dealt
 				//deal a card if the dealer's hand is valued under DEALER_LIMIT
 				/*  while ((dealer.getValueOfHand()[0] < DEALER_LIMIT) && (dealer.getValueOfHand()[1] < DEALER_LIMIT))  {
@@ -316,7 +331,12 @@ public class BlackJackGui {
 				 */	
 				drawPanel.setMessage(message);
 				drawPanel.setGameOn(gameOn);
-				frame.repaint();	
+				drawPanel.setPlayerHand(player.getHands());
+				drawPanel.setDealerHand(dealer.getHand());
+				System.out.println("player hand" + player.getHands()==null);
+				frame.repaint();
+				
+			
 			}
 
 		}

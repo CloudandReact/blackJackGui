@@ -1,9 +1,5 @@
 import java.util.ArrayList;
 
-
-
-
-
 public class Hand {
 	private int maxCards =5;
 	private int bet;
@@ -62,7 +58,6 @@ public class Hand {
 			System.out.println("too many cards cant hit");
 		}
 
-		System.out.println("too many cards cant hit");
 	}
 	public int getBet(){
 		return bet;
@@ -73,5 +68,6 @@ public class Hand {
 	public Card getCard(int i){
 		return cards.get(i);
 	}
+
 
 }

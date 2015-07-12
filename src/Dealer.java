@@ -19,5 +19,6 @@ public class Dealer {
 	public void clearHand(){
 		hand = null;
 	}
+	
 
 }

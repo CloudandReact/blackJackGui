@@ -48,7 +48,7 @@ public class Hand {
 		this.bet = bet;
 	}
 	public boolean canHit(){
-		return canHit && getScore()<=21 && cards.size()<5;
+		return canHit && getScore()<21 && cards.size()<5;
 	}
 	public void addCard(Card card){
 		if(canHit()){

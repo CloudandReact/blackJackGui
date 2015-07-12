@@ -250,9 +250,9 @@ public class BlackJackGui {
 				//deal a card and add the card to player's hand go through player hands one by one
 				int currentHand = player.getCurrentHand();
 				System.out.println("current hand "+ currentHand);
-				if(!player.getHand(currentHand).isBusted()){
+				if(player.getHand(currentHand).canHit()){
 					player.addCard(currentHand,deck.dealCard());
-					if(player.getHand(currentHand).canHit() && currentHand+1==player.numberOfHands() ){
+					if(!player.getHand(currentHand).canHit() && currentHand+1==player.numberOfHands() ){
 						gameOn=false;
 						System.out.println("game on false");
 						drawPanel.setPlayerHand(player.getHands());
@@ -264,7 +264,7 @@ public class BlackJackGui {
 						frame.repaint();
 						resetGame();
 					}
-					else if(player.getHand(currentHand).isBusted()){
+					else if(!player.getHand(currentHand).canHit()){
 						player.incrementCurrentHand();
 						drawPanel.setPlayerHand(player.getHands());
 						//drawPanel.setMessage(message);
@@ -306,7 +306,7 @@ public class BlackJackGui {
 			if (gameOn) {
 
 				int currentHandNumber = player.getCurrentHand();
-				System.out.println("current hand " +currentHandNumber + " hands has "+ player.getNumberOfHands() );
+				System.out.println("current hand " +currentHandNumber + " hands has "+ player.numberOfHands() );
 				/*Hand currentHand = player.getHand(currentHandNumber);
 				if(currentHand.isBusted()){
 					System.out.println("current hand busted");	
@@ -316,7 +316,7 @@ public class BlackJackGui {
 					System.out.println("not busted continue");
 
 				}*/
-				if(currentHandNumber+1>=player.getNumberOfHands()){
+				if(currentHandNumber+1>=player.numberOfHands()){
 
 					gameOn = false;
 					System.out.println("game over");

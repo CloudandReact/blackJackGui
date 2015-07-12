@@ -109,11 +109,10 @@ public class BlackJackGui {
 		handsNumber.setEnabled(true);
 		//player.setCurrentHand(0);
 		//hitButton.setEnabled(false);
-		player.clearHands();
-		dealer.clearHand();
+		//player.clearHands();
+		//dealer.clearHand();
 		gameOn = false;
-		drawPanel.setDealerHand(dealer.getHand());
-		drawPanel.setPlayerHand(player.getHands());
+
 	}
 
 	/*
@@ -137,6 +136,9 @@ public class BlackJackGui {
 		playerBalance.setBounds(400,25,220,40);
 		drawPanel.add(playerBalance);
 	}
+	public void calculateWinnings(Player player,Dealer dealer){
+
+	}
 
 	/*
 	 * new game button event handling
@@ -157,6 +159,9 @@ public class BlackJackGui {
 				}
 				else {
 					gameOn = true;
+					player.setCurrentHand(0);
+					dealer.clearHand();
+					player.clearHands();
 				}
 
 				//deal two cards to dealer and player
@@ -168,6 +173,7 @@ public class BlackJackGui {
 					Hand playerHand = new Hand(deck.dealCard(),deck.dealCard(),betValue,true);
 					player.addHand(playerHand);
 				}
+				player.incrementBalance(numberOfHands*betValue);
 				dealer.setHand(dealerHand);
 
 				//check if the player has a blackjack
@@ -246,17 +252,33 @@ public class BlackJackGui {
 				System.out.println("current hand "+ currentHand);
 				if(!player.getHand(currentHand).isBusted()){
 					player.addCard(currentHand,deck.dealCard());
-				}
-				else{
-					System.out.println("busted cant hit");
-					if(player.getNumberOfHands()+1==player.getCurrentHand()){
+					if(player.getHand(currentHand).canHit() && currentHand+1==player.numberOfHands() ){
 						gameOn=false;
 						System.out.println("game on false");
-						//resetGame();
+						drawPanel.setPlayerHand(player.getHands());
+						//drawPanel.setMessage(message);
+						drawPanel.setGameOn(gameOn);
+						payout = new Payout(dealer,player);
+						payout.payoutCalculation();
+						drawPanel.setMessage(payout.message());
+						frame.repaint();
+						resetGame();
+					}
+					else if(player.getHand(currentHand).isBusted()){
+						player.incrementCurrentHand();
+						drawPanel.setPlayerHand(player.getHands());
+						//drawPanel.setMessage(message);
+						drawPanel.setGameOn(gameOn);
+						frame.repaint();
 					}
 					else{
-						player.incrementCurrentHand();
+						drawPanel.setPlayerHand(player.getHands());
+						//drawPanel.setMessage(message);
+						drawPanel.setGameOn(gameOn);
+						frame.repaint();
 					}
+
+
 
 
 				}
@@ -269,10 +291,7 @@ public class BlackJackGui {
 					gameOn = false;
 				}*/
 				//draw player's hand
-				drawPanel.setPlayerHand(player.getHands());
-				//drawPanel.setMessage(message);
-				drawPanel.setGameOn(gameOn);
-				frame.repaint();
+
 			}
 
 		}
@@ -283,64 +302,44 @@ public class BlackJackGui {
 	 */
 	class standListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			
+
 			if (gameOn) {
-				boolean isGameOver = false;
+
 				int currentHandNumber = player.getCurrentHand();
-				Hand currentHand = player.getHand(currentHandNumber);
+				System.out.println("current hand " +currentHandNumber + " hands has "+ player.getNumberOfHands() );
+				/*Hand currentHand = player.getHand(currentHandNumber);
 				if(currentHand.isBusted()){
-					System.out.println("current bad busted");	
+					System.out.println("current hand busted");	
 				}
 
 				else{
 					System.out.println("not busted continue");
 
-				}
+				}*/
 				if(currentHandNumber+1>=player.getNumberOfHands()){
-					
-					isGameOver = true;
+
+					gameOn = false;
+					System.out.println("game over");
 				}
-				player.incrementCurrentHand();
-				//loop check player all hands dealt
-				//deal a card if the dealer's hand is valued under DEALER_LIMIT
-				/*  while ((dealer.getValueOfHand()[0] < DEALER_LIMIT) && (dealer.getValueOfHand()[1] < DEALER_LIMIT))  {
-					dealer.addCard(deck.dealCard());
-				}
-				//is the dealer busted
-				if (help.checkBust(dealer)) {
-					message = "You win !";
-					drawPanel.setMessage(message);
-					drawPanel.setGameOn(gameOn);
-					frame.repaint();					
-				} else {
-					//determine the winner
-					winner = help.determineWinner(player, dealer);
-					switch (winner) {
-					case PLAYER: 	message = "You win !";
-					break;
-					case DEALER: 	message = "You lose !";
-					break;
-					case TIE:		message = "Tie !";
-					break;
-					default:		break;
-					}		
-				 */	
-				if(!isGameOver){
+
+				if(gameOn){
 					drawPanel.setMessage(message);
 					drawPanel.setGameOn(gameOn);
 					System.out.println("player hand" + player.getHands()==null);
 					frame.repaint();
+					player.incrementCurrentHand();
 				}
 				else{
 					payout = new Payout(dealer,player);
 					payout.payoutCalculation();
+					drawPanel.setPlayerHand(player.getHands());
 					drawPanel.setMessage(payout.message());
 					drawPanel.setGameOn(gameOn);
 					System.out.println("player hand" + player.getHands()==null);
 					frame.repaint();
 					resetGame();
 				}
-				
+
 
 
 			}
@@ -401,7 +400,7 @@ public class BlackJackGui {
 			//draw message
 			g.setFont(new Font("Arial", Font.BOLD, 20));
 			g.setColor(new Color(1.0f, 0.0f, 0.0f));
-			g.drawString(message,150,50);
+			g.drawString(message,100,50);
 			//draw player's hand
 			if (playerHands != null) {
 				for (int i=0; i < playerHands.size(); i++) {

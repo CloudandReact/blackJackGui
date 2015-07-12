@@ -22,6 +22,7 @@ public class Payout {
 
 			}
 			else if(player.getHand(i).isBlackJack2() && dealerHand.isBlackJack2()){
+				totalWinnings += player.getHand(i).getBet();
 				player.incrementBalance(player.getHand(i).getBet());
 
 			}

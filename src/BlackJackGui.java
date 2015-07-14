@@ -117,6 +117,7 @@ public class BlackJackGui {
 		//player.clearHands();
 		//dealer.clearHand();
 		gameOn = false;
+		this.playerBalance.setText("Player balance" + player.getBalance());
 
 	}
 

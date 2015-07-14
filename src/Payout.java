@@ -35,7 +35,7 @@ public class Payout {
 
 			else if(player.getHand(i).getScore()>dealer.getHand().getScore() || dealerHand.isBusted()){
 				player.incrementBalance(player.getHand(i).getBet()*2);
-				totalWinnings += player.getHand(i).getBet()*2;
+				totalWinnings += player.getHand(i).getBet();
 			}
 			else{
 				totalLoses += player.getHand(i).getBet();

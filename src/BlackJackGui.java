@@ -106,7 +106,13 @@ public class BlackJackGui {
 	}
 	public void dealerUp(){
 		while(dealer.getHand().getScore()<17){
-			dealer.getHand().addCard(deck.dealCard());
+			try {
+				dealer.getHand().addCard(deck.dealCard());
+			} catch (DeckEmptyException e) {
+				// TODO Auto-generated catch block
+				e.getMessage();
+				e.printStackTrace();
+			}
 		}
 	}
 	public void resetGame(){
@@ -126,7 +132,11 @@ public class BlackJackGui {
 	 */
 	private void setupNewGame() {
 		//create a new deck
-
+		if(deck==null){
+			deck = new Deck();
+		}
+		decks.setVisible(false);
+		decksLabel.setVisible(false);
 		//new player
 		player = new Player(50);
 		//new dealer
@@ -142,9 +152,7 @@ public class BlackJackGui {
 		playerBalance.setBounds(400,25,220,40);
 		drawPanel.add(playerBalance);
 	}
-	public void calculateWinnings(Player player,Dealer dealer){
 
-	}
 
 	/*
 	 * new game button event handling
@@ -176,9 +184,21 @@ public class BlackJackGui {
 				int numberOfHands =  Integer.parseInt(command);
 				//player.setNumberOfHands(numberOfHands);
 				//player number of hands
-				Hand dealerHand = new Hand(deck.dealCard(),deck.dealCard(),0,false);
+				Hand dealerHand = null;
+				try {
+					dealerHand = new Hand(deck.dealCard(),deck.dealCard(),0,false);
+				} catch (DeckEmptyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				for(int i=0;i<numberOfHands;i++){
-					Hand playerHand = new Hand(deck.dealCard(),deck.dealCard(),betValue,true);
+					Hand playerHand = null;
+					try {
+						playerHand = new Hand(deck.dealCard(),deck.dealCard(),betValue,true);
+					} catch (DeckEmptyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					player.addHand(playerHand);
 				}
 				player.incrementBalance(-numberOfHands*betValue);
@@ -259,7 +279,12 @@ public class BlackJackGui {
 				int currentHand = player.getCurrentHand();
 				System.out.println("current hand "+ currentHand);
 				if(player.getHand(currentHand).canHit()){
-					player.addCard(currentHand,deck.dealCard());
+					try {
+						player.addCard(currentHand,deck.dealCard());
+					} catch (DeckEmptyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if(!player.getHand(currentHand).canHit() && currentHand+1==player.numberOfHands() ){
 						gameOn=false;
 						System.out.println("game on false");

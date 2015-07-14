@@ -68,6 +68,13 @@ public class Hand {
 	public Card getCard(int i){
 		return cards.get(i);
 	}
+	public String toString(){
+		String cardsString ="";
+		for(int i=0;i<cards.size();i++){
+			cardsString += " "+cards.get(i);
+		}
+		return cardsString;
+	}
 
 
 }

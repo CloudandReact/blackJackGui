@@ -8,7 +8,7 @@ public class Card {
 	public enum Suit {CLUBS, SPADES, HEARTS, DIAMONDS}
 	
 	public enum FaceValue {
-		ACE(1), KING(10), QUEEN(10), JACK(10), TEN(10), NINE(9), 
+		ACE(11), KING(10), QUEEN(10), JACK(10), TEN(10), NINE(9), 
 		EIGHT(8), SEVEN(7), SIX(6), FIVE(5), FOUR(4), THREE(3), TWO(2);
 		private int intValue;
 	
@@ -19,6 +19,7 @@ public class Card {
 		public int getIntValue() {
 			return this.intValue;
 		}
+		
 	}
 	
 	private Suit suit;
@@ -72,6 +73,10 @@ public class Card {
 	 */
 	public void setImage(Image image) {
 		this.image = image;
+	}
+	public String toString(){
+		String cardFace = suit + " " + faceValue;
+		return cardFace;
 	}
 	
 }

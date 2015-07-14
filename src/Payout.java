@@ -13,6 +13,7 @@ public class Payout {
 		//different payouts for different situations
 		for(int i=0;i<player.numberOfHands();i++){
 			Hand dealerHand = dealer.getHand();
+			System.out.println(player.getHand(i));
 			if(dealerHand==null||player.getHands()==null){
 				return;
 			}

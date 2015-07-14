@@ -71,7 +71,7 @@ public class BlackJackGui {
 		standButton.setBounds(355, 415, 75, 35); 
 		drawPanel.add(standButton);
 		String multiD[]= {"one deck","five deck"};
-		String bets[] =  {"5","10","20"};
+		String bets [] =  {"5","10","20"};
 		String handsN [] = {"1","2","3"};
 		decks= new JComboBox<Object>(multiD);
 		betsCom= new JComboBox<Object>(bets);
@@ -103,6 +103,11 @@ public class BlackJackGui {
 		//register stand button event listener
 		standButton.addActionListener(new standListener());
 		frame.setVisible(true);
+	}
+	public void dealerUp(){
+		while(dealer.getHand().getScore()<17){
+			dealer.getHand().addCard(deck.dealCard());
+		}
 	}
 	public void resetGame(){
 		betsCom.setEnabled(true);
@@ -151,7 +156,9 @@ public class BlackJackGui {
 				String command = (String) handsNumber.getSelectedItem();
 				handsNumber.setEnabled(false);
 				System.out.println(command);
-				int betValue =  betsCom.getSelectedIndex();
+
+				int betValue = Integer.parseInt((String)betsCom.getSelectedItem());
+				System.out.println("bet valye "+ betValue);
 				betsCom.setEnabled(false);
 				if(!isFirstGame){
 					setupNewGame();
@@ -173,7 +180,7 @@ public class BlackJackGui {
 					Hand playerHand = new Hand(deck.dealCard(),deck.dealCard(),betValue,true);
 					player.addHand(playerHand);
 				}
-				player.incrementBalance(numberOfHands*betValue);
+				player.incrementBalance(-numberOfHands*betValue);
 				dealer.setHand(dealerHand);
 
 				//check if the player has a blackjack
@@ -256,11 +263,14 @@ public class BlackJackGui {
 						gameOn=false;
 						System.out.println("game on false");
 						drawPanel.setPlayerHand(player.getHands());
+						dealerUp();
+						drawPanel.setDealerHand(dealer.getHand());
 						//drawPanel.setMessage(message);
 						drawPanel.setGameOn(gameOn);
 						payout = new Payout(dealer,player);
 						payout.payoutCalculation();
-						drawPanel.setMessage(payout.message());
+						String message = payout.message();
+						drawPanel.setMessage(message);
 						frame.repaint();
 						resetGame();
 					}
@@ -330,10 +340,13 @@ public class BlackJackGui {
 					player.incrementCurrentHand();
 				}
 				else{
+					dealerUp();
+					drawPanel.setDealerHand(dealer.getHand());
 					payout = new Payout(dealer,player);
 					payout.payoutCalculation();
 					drawPanel.setPlayerHand(player.getHands());
-					drawPanel.setMessage(payout.message());
+					String message = payout.message();
+					drawPanel.setMessage(message);
 					drawPanel.setGameOn(gameOn);
 					System.out.println("player hand" + player.getHands()==null);
 					frame.repaint();
@@ -400,7 +413,7 @@ public class BlackJackGui {
 			//draw message
 			g.setFont(new Font("Arial", Font.BOLD, 20));
 			g.setColor(new Color(1.0f, 0.0f, 0.0f));
-			g.drawString(message,100,50);
+			g.drawString(message,100,180);
 			//draw player's hand
 			if (playerHands != null) {
 				for (int i=0; i < playerHands.size(); i++) {

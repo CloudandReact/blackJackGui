@@ -1,4 +1,6 @@
-A simple Blackjack game with GUI. Originally developed in my local Perforce repository.
+A simple Blackjack game with GUI. Using java swing
+
+Allows playing with 1 or 5 deck black jack
 
 How to use
 -----------

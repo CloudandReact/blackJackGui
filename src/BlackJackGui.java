@@ -458,8 +458,7 @@ public class BlackJackGui {
 					if (gameOn) {
 						//first card face down if game on
 						if (i == 0) {
-							//image = new ImageIcon("pictures/b1fv.png").getImage();
-							image = new ImageIcon(this.getClass().getResource("b1fv.png")).getImage();
+							image = new ImageIcon("pictures/b1fv.png").getImage();
 						} else {
 							image = dealerHand.getCard(i).getImage();			
 						}	

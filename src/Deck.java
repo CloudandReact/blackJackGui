@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
  * - no jokers
  */
 public class Deck {
-	
+
 	static final int MAX = 52;	
 	//ArrayList deck
 	protected ArrayList<Card> deck = new ArrayList<Card>();
@@ -21,25 +21,25 @@ public class Deck {
 		for(Card.FaceValue faceValue : Card.FaceValue.values())
 			for(Card.Suit suit: Card.Suit.values()) {
 				index++;
-				deck.add(new Card(suit, faceValue, new ImageIcon(this.getClass().getResource( (index + ".png"))).getImage()));	
+				deck.add(new Card(suit, faceValue, new ImageIcon("pictures/" + index + ".png").getImage()));	
 			}	
 	}
-	
+
 	/*
 	 * deal a card from a deck
 	 */
 	public Card dealCard() throws DeckEmptyException {
 		//remove dealed card from a deck 
-		
-			int index = (int)(Math.random()*deck.size()); 
-			if(deck==null ||deck.size()==0){
-				throw( new DeckEmptyException());
-			}
-			return deck.remove(index);		
-		
+
+		int index = (int)(Math.random()*deck.size()); 
+		if(deck==null||deck.size()==0){
+			throw( new DeckEmptyException());
+		}
+		return deck.remove(index);		
+
 	}
 	public boolean isSingleDeck(){
 		return true;
 	}
-			
+
 }

@@ -11,7 +11,7 @@ public class MultiDeck extends Deck {
 			for(Card.FaceValue faceValue : Card.FaceValue.values())
 				for(Card.Suit suit: Card.Suit.values()) {
 					index++;
-					deck.add(new Card(suit, faceValue, new ImageIcon(this.getClass().getResource( index + ".png")).getImage()));	
+					deck.add(new Card(suit, faceValue, new ImageIcon("pictures/" + index + ".png").getImage()));	
 				}	
 		}
 	}
